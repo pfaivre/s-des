@@ -12,6 +12,7 @@
 
 package com.pfaivre.crypto;
 
+import java.io.*;
 import java.util.ArrayList;
 
 /**
@@ -423,6 +424,11 @@ public class SDES {
         return bool2byte(tmp);
     }
 
+    /**
+     * Déchiffre un block de données
+     * @param block Un octer à déchiffrer
+     * @return Un octet en clair
+     */
     @SuppressWarnings("Duplicates")
     byte decrypt(byte block) {
         boolean[] tmp = byte2bool(block);
@@ -438,6 +444,57 @@ public class SDES {
         tmp = rip(tmp);
 
         return bool2byte(tmp);
+    }
+
+    /**
+     * Chiffre un fichier
+     * Le contenu du fichier sera chiffré octet par octet
+     * @param inputFile Chemin vers le fichier à lire
+     * @param outputFile Chemin vers le fichier à écrire
+     */
+    public void encryptFile(File inputFile, File outputFile) throws IOException {
+        FileInputStream input = null;
+        FileOutputStream output = null;
+
+        try {
+            input = new FileInputStream(inputFile);
+            output = new FileOutputStream(outputFile);
+
+            int c = -1;
+            while ((c = input.read()) != -1) {
+                output.write(this.encrypt((byte)c));
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if (input != null)
+                input.close();
+            if (output != null)
+                output.close();
+        }
+    }
+
+    public void decryptFile(File inputFile, File outputFile) throws IOException {
+        FileInputStream input = null;
+        FileOutputStream output = null;
+
+        try {
+            input = new FileInputStream(inputFile);
+            output = new FileOutputStream(outputFile);
+
+            int c = -1;
+            while ((c = input.read()) != -1) {
+                byte decrypted = this.decrypt((byte)c);
+                output.write(decrypted);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if (input != null)
+                input.close();
+            if (output != null)
+                output.close();
+        }
     }
 
     public String toString() {
