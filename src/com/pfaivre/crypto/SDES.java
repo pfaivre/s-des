@@ -366,7 +366,7 @@ public class SDES {
      * @param block Octet à traduire
      * @return Tableau de 8 boolean
      */
-    static boolean[] char2bool(char block) {
+    static boolean[] byte2bool(byte block) {
         boolean[] result = new boolean[8];
 
         // On parcourt l'octet bit par bit
@@ -386,17 +386,17 @@ public class SDES {
      * @param block Tableau de 8 booléens représentants les bits
      * @return char
      */
-    static char bool2char(boolean[] block) {
-        char result = 0b00000000;
+    static byte bool2byte(boolean[] block) {
+        byte result = 0b00000000;
 
         // Pour chaque booléen (bit) du tableau
         for (int i = 0 ; i < block.length ; ++i) {
             // On "l'imprime" à droite dans le char
-            result = (char)(result | (block[i] ? 1 : 0));
+            result = (byte)(result | (block[i] ? 1 : 0));
 
             // Et on décale les précédents vers la gauche pour laisser la place au suivant
             if (i < block.length - 1)
-                result = (char)(result << 1);
+                result = (byte)(result << 1);
         }
 
         return result;
@@ -407,8 +407,9 @@ public class SDES {
      * @param block Un octet de données à chiffrer
      * @return Un octet chiffré
      */
-    public char encrypt(char block) {
-        boolean[] tmp = char2bool(block);
+    @SuppressWarnings("Duplicates")
+    byte encrypt(byte block) {
+        boolean[] tmp = byte2bool(block);
 
         ArrayList<boolean[]> keys = SDES.generateKeys(this.master_key);
         boolean[] K1 = keys.get(0);
@@ -419,11 +420,12 @@ public class SDES {
         tmp = sw(tmp);
         tmp = fK(tmp, K2);
         tmp = rip(tmp);
-        return bool2char(tmp);
+        return bool2byte(tmp);
     }
 
-    public char decrypt(char block) {
-        boolean[] tmp = char2bool(block);
+    @SuppressWarnings("Duplicates")
+    byte decrypt(byte block) {
+        boolean[] tmp = byte2bool(block);
 
         ArrayList<boolean[]> keys = SDES.generateKeys(this.master_key);
         boolean[] K1 = keys.get(0);
@@ -435,7 +437,7 @@ public class SDES {
         tmp = fK(tmp, K1);
         tmp = rip(tmp);
 
-        return bool2char(tmp);
+        return bool2byte(tmp);
     }
 
     public String toString() {

@@ -212,42 +212,42 @@ public class SDESTest {
     }
 
     @org.junit.Test
-    public void char2bool() {
-        System.out.print("Testing char2bool...");
+    public void byte2bool() {
+        System.out.print("Testing byte2bool...");
 
         // 01000011 ('C')
-        char input = 0b01000011;
+        byte input = (byte)0b01000011;
         // 01000011
         boolean[] expectedOutput = new boolean[] {false, true, false, false, false, false, true, true};
-        boolean[] output = SDES.char2bool(input);
+        boolean[] output = SDES.byte2bool(input);
         assertArrayEquals(expectedOutput, output);
 
         // 11001010 ('Ê')
-        char input2 = 0b11001010;
+        byte input2 = (byte)0b11001010;
         // 11001010
         boolean[] expectedOutput2 = new boolean[] {true, true, false, false, true, false, true, false};
-        boolean[] output2 = SDES.char2bool(input2);
+        boolean[] output2 = SDES.byte2bool(input2);
         assertArrayEquals(expectedOutput2, output2);
 
         System.out.println(" success");
     }
 
     @org.junit.Test
-    public void bool2char() {
-        System.out.print("Testing bool2char...");
+    public void bool2byte() {
+        System.out.print("Testing bool2byte...");
 
         // 01000011
         boolean[] input = new boolean[] {false, true, false, false, false, false, true, true};
         // 01000011 ('C')
-        char expectedOutput = 0b01000011;
-        char output = SDES.bool2char(input);
+        byte expectedOutput = (byte)0b01000011;
+        byte output = SDES.bool2byte(input);
         assertEquals(expectedOutput, output);
 
         // 11001010
         boolean[] input2 = new boolean[] {true, true, false, false, true, false, true, false};
         // 11001010 ('Ê')
-        char expectedOutput2 = 0b11001010;
-        char output2 = SDES.bool2char(input2);
+        byte expectedOutput2 = (byte)0b11001010;
+        byte output2 = SDES.bool2byte(input2);
         assertEquals(expectedOutput2, output2);
 
         System.out.println(" success");
@@ -258,35 +258,35 @@ public class SDESTest {
         System.out.print("Testing encrypt...");
 
         // 11010101
-        char input = 0b11010101;
+        byte input = (byte)0b11010101;
         // 01110011
-        char expectedOutput = 0b01110011;
+        byte expectedOutput = (byte)0b01110011;
         SDES sdes = new SDES("0111010001");
-        char output = sdes.encrypt(input);
+        byte output = sdes.encrypt(input);
         assertEquals(expectedOutput, output);
 
         // 01001100
-        char input2 = 0b01001100;
+        byte input2 = (byte)0b01001100;
         // 00100010
-        char expectedOutput2 = 0b00100010;
+        byte expectedOutput2 = (byte)0b00100010;
         SDES sdes2 = new SDES("1111111111");
-        char output2 = sdes2.encrypt(input2);
+        byte output2 = sdes2.encrypt(input2);
         assertEquals(expectedOutput2, output2);
 
         // 00000000
-        char input3 = 0b00000000;
+        byte input3 = (byte)0b00000000;
         // 11110000
-        char expectedOutput3 = 0b11110000;
+        byte expectedOutput3 = (byte)0b11110000;
         SDES sdes3 = new SDES("0000000000");
-        char output3 = sdes3.encrypt(input3);
+        byte output3 = sdes3.encrypt(input3);
         assertEquals(expectedOutput3, output3);
 
         // 11111111
-        char input4 = 0b11111111;
+        byte input4 = (byte)0b11111111;
         // 00001111
-        char expectedOutput4 = 0b00001111;
+        byte expectedOutput4 = (byte)0b00001111;
         SDES sdes4 = new SDES("1111111111");
-        char output4 = sdes4.encrypt(input4);
+        byte output4 = sdes4.encrypt(input4);
         assertEquals(expectedOutput4, output4);
 
         System.out.println(" success");
@@ -297,35 +297,35 @@ public class SDESTest {
         System.out.print("Testing decrypt...");
 
         // 01110011
-        char input = 0b01110011;
+        byte input = (byte)0b01110011;
         // 11010101
-        char expectedOutput = 0b11010101;
+        byte expectedOutput = (byte)0b11010101;
         SDES sdes = new SDES("0111010001");
-        char output = sdes.decrypt(input);
+        byte output = sdes.decrypt(input);
         assertEquals(expectedOutput, output);
 
         // 00100010
-        char input2 = 0b00100010;
+        byte input2 = (byte)0b00100010;
         // 01001100
-        char expectedOutput2 = 0b01001100;
+        byte expectedOutput2 = (byte)0b01001100;
         SDES sdes2 = new SDES("1111111111");
-        char output2 = sdes2.decrypt(input2);
+        byte output2 = sdes2.decrypt(input2);
         assertEquals(expectedOutput2, output2);
 
         // 11110000
-        char input3 = 0b11110000;
+        byte input3 = (byte)0b11110000;
         // 00000000
-        char expectedOutput3 = 0b00000000;
+        byte expectedOutput3 = (byte)0b00000000;
         SDES sdes3 = new SDES("0000000000");
-        char output3 = sdes3.decrypt(input3);
+        byte output3 = sdes3.decrypt(input3);
         assertEquals(expectedOutput3, output3);
 
         // 00001111
-        char input4 = 0b00001111;
+        byte input4 = (byte)0b00001111;
         // 11111111
-        char expectedOutput4 = 0b11111111;
+        byte expectedOutput4 = (byte)0b11111111;
         SDES sdes4 = new SDES("1111111111");
-        char output4 = sdes4.decrypt(input4);
+        byte output4 = sdes4.decrypt(input4);
         assertEquals(expectedOutput4, output4);
 
         System.out.println(" success");
