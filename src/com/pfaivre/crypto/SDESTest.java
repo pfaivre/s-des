@@ -10,16 +10,6 @@ import static org.junit.Assert.*;
  * Created by pierre on 30/03/16.
  */
 public class SDESTest {
-    @org.junit.Before
-    public void setUp() throws Exception {
-
-    }
-
-    @org.junit.After
-    public void tearDown() throws Exception {
-
-    }
-
     @org.junit.Test
     public void p10() {
         System.out.print("Testing p10...");
@@ -30,7 +20,7 @@ public class SDESTest {
         // 0001101010
         boolean[] expectedOutput = new boolean[] {false, false, false, true, true, false, true, false, true, false};
         boolean[] output = SDES.p10(input);
-        assertArrayEquals(output, expectedOutput);
+        assertArrayEquals(expectedOutput, output);
 
         System.out.println(" success");
     }
@@ -45,7 +35,7 @@ public class SDESTest {
         // 00111000
         boolean[] expectedOutput = new boolean[] {false, false, true, true, true, false, false, false};
         boolean[] output = SDES.p8(input);
-        assertArrayEquals(output, expectedOutput);
+        assertArrayEquals(expectedOutput, output);
 
         System.out.println(" success");
     }
@@ -60,12 +50,12 @@ public class SDESTest {
         // 0000111000
         boolean[] expectedOutput = new boolean[] {false, false, false, false, true, true, true, false, false, false};
         boolean[] output = SDES.circularLeftShift(input, 1);
-        assertArrayEquals(output, expectedOutput);
+        assertArrayEquals(expectedOutput, output);
 
         // 0010000011
         boolean[] expectedOutput2 = new boolean[] {false, false, true, false, false, false, false, false, true, true};
         boolean[] output2 = SDES.circularLeftShift(input, 3);
-        assertArrayEquals(output2, expectedOutput2);
+        assertArrayEquals(expectedOutput2, output2);
 
         System.out.println(" success");
     }
@@ -87,8 +77,8 @@ public class SDESTest {
         boolean[] K1 = keys.get(0);
         boolean[] K2 = keys.get(1);
 
-        assertArrayEquals(K1, expectedK1);
-        assertArrayEquals(K2, expectedK2);
+        assertArrayEquals(expectedK1, K1);
+        assertArrayEquals(expectedK2, K2);
 
         System.out.println(" success");
     }
@@ -102,14 +92,14 @@ public class SDESTest {
         // 10101001
         boolean[] expectedOutput = new boolean[] {true, false, true, false, true, false, false, true};
         boolean[] output = SDES.ip(input);
-        assertArrayEquals(output, expectedOutput);
+        assertArrayEquals(expectedOutput, output);
 
         // 10110100
         boolean[] input2 = new boolean[] {true, false, true, true, false, true, false, false};
         // 01111000
         boolean[] expectedOutput2 = new boolean[] {false, true, true, true, true, false, false, false};
         boolean[] output2 = SDES.ip(input2);
-        assertArrayEquals(output2, expectedOutput2);
+        assertArrayEquals(expectedOutput2, output2);
 
         System.out.println(" success");
     }
@@ -123,14 +113,14 @@ public class SDESTest {
         // 01110111
         boolean[] expectedOutput = new boolean[] {false, true, true, true, false, true, true, true};
         boolean[] output = SDES.rip(input);
-        assertArrayEquals(output, expectedOutput);
+        assertArrayEquals(expectedOutput, output);
 
         // 01111000
         boolean[] input2 = new boolean[] {false, true, true, true, true, false, false, false};
         // 10110100
         boolean[] expectedOutput2 = new boolean[] {true, false, true, true, false, true, false, false};
         boolean[] output2 = SDES.rip(input2);
-        assertArrayEquals(output2, expectedOutput2);
+        assertArrayEquals(expectedOutput2, output2);
 
         System.out.println(" success");
     }
@@ -144,7 +134,7 @@ public class SDESTest {
         // 11000011
         boolean[] expectedOutput = new boolean[] {true, true, false, false, false, false, true, true};
         boolean[] output = SDES.ep(input);
-        assertArrayEquals(output, expectedOutput);
+        assertArrayEquals(expectedOutput, output);
 
         System.out.println(" success");
     }
@@ -160,7 +150,183 @@ public class SDESTest {
         // 11111010
         boolean[] expectedOutput = new boolean[] {true, true, true, true, true, false, true, false};
         boolean[] output = SDES.xor(inputA, inputB);
-        assertArrayEquals(output, expectedOutput);
+        assertArrayEquals(expectedOutput, output);
+
+        System.out.println(" success");
+    }
+
+    @org.junit.Test
+    public void sboxTransform() {
+        System.out.print("Testing sboxTransform...");
+
+        // 01100111
+        boolean[] input = new boolean[] {false, true, true, false, false, true, true, true};
+        // 1011
+        boolean[] expectedOutput = new boolean[] {true, false, true, true};
+        boolean[] output = SDES.sboxTransform(input);
+        assertArrayEquals(expectedOutput, output);
+
+        System.out.println(" success");
+    }
+
+    @org.junit.Test
+    public void p4() {
+        System.out.print("Testing p4...");
+
+        // 1011
+        boolean[] input = new boolean[] {true, false, true, true};
+        // 0111
+        boolean[] expectedOutput = new boolean[] {false, true, true, true};
+        boolean[] output = SDES.p4(input);
+        assertArrayEquals(expectedOutput, output);
+
+        // 0110
+        boolean[] input2 = new boolean[] {false, true, true, false};
+        // 1010
+        boolean[] expectedOutput2 = new boolean[] {true, false, true, false};
+        boolean[] output2 = SDES.p4(input2);
+        assertArrayEquals(expectedOutput2, output2);
+
+        System.out.println(" success");
+    }
+
+    @org.junit.Test
+    public void sw() {
+        System.out.print("Testing sw...");
+
+        // 11110000
+        boolean[] input = new boolean[] {true, true, true, true, false, false, false, false};
+        // 00001111
+        boolean[] expectedOutput = new boolean[] {false, false, false, false, true, true, true, true};
+        boolean[] output = SDES.sw(input);
+        assertArrayEquals(expectedOutput, output);
+
+        // 10010011
+        boolean[] input2 = new boolean[] {true, false, false, true, false, false, true, true};
+        // 00111001
+        boolean[] expectedOutput2 = new boolean[] {false, false, true, true, true, false, false, true};
+        boolean[] output2 = SDES.sw(input2);
+        assertArrayEquals(expectedOutput2, output2);
+
+        System.out.println(" success");
+    }
+
+    @org.junit.Test
+    public void char2bool() {
+        System.out.print("Testing char2bool...");
+
+        // 01000011 ('C')
+        char input = 0b01000011;
+        // 01000011
+        boolean[] expectedOutput = new boolean[] {false, true, false, false, false, false, true, true};
+        boolean[] output = SDES.char2bool(input);
+        assertArrayEquals(expectedOutput, output);
+
+        // 11001010 ('Ê')
+        char input2 = 0b11001010;
+        // 11001010
+        boolean[] expectedOutput2 = new boolean[] {true, true, false, false, true, false, true, false};
+        boolean[] output2 = SDES.char2bool(input2);
+        assertArrayEquals(expectedOutput2, output2);
+
+        System.out.println(" success");
+    }
+
+    @org.junit.Test
+    public void bool2char() {
+        System.out.print("Testing bool2char...");
+
+        // 01000011
+        boolean[] input = new boolean[] {false, true, false, false, false, false, true, true};
+        // 01000011 ('C')
+        char expectedOutput = 0b01000011;
+        char output = SDES.bool2char(input);
+        assertEquals(expectedOutput, output);
+
+        // 11001010
+        boolean[] input2 = new boolean[] {true, true, false, false, true, false, true, false};
+        // 11001010 ('Ê')
+        char expectedOutput2 = 0b11001010;
+        char output2 = SDES.bool2char(input2);
+        assertEquals(expectedOutput2, output2);
+
+        System.out.println(" success");
+    }
+
+    @org.junit.Test
+    public void encrypt() {
+        System.out.print("Testing encrypt...");
+
+        // 11010101
+        char input = 0b11010101;
+        // 01110011
+        char expectedOutput = 0b01110011;
+        SDES sdes = new SDES("0111010001");
+        char output = sdes.encrypt(input);
+        assertEquals(expectedOutput, output);
+
+        // 01001100
+        char input2 = 0b01001100;
+        // 00100010
+        char expectedOutput2 = 0b00100010;
+        SDES sdes2 = new SDES("1111111111");
+        char output2 = sdes2.encrypt(input2);
+        assertEquals(expectedOutput2, output2);
+
+        // 00000000
+        char input3 = 0b00000000;
+        // 11110000
+        char expectedOutput3 = 0b11110000;
+        SDES sdes3 = new SDES("0000000000");
+        char output3 = sdes3.encrypt(input3);
+        assertEquals(expectedOutput3, output3);
+
+        // 11111111
+        char input4 = 0b11111111;
+        // 00001111
+        char expectedOutput4 = 0b00001111;
+        SDES sdes4 = new SDES("1111111111");
+        char output4 = sdes4.encrypt(input4);
+        assertEquals(expectedOutput4, output4);
+
+        System.out.println(" success");
+    }
+
+    @org.junit.Test
+    public void decrypt() {
+        System.out.print("Testing decrypt...");
+
+        // 01110011
+        char input = 0b01110011;
+        // 11010101
+        char expectedOutput = 0b11010101;
+        SDES sdes = new SDES("0111010001");
+        char output = sdes.decrypt(input);
+        assertEquals(expectedOutput, output);
+
+        // 00100010
+        char input2 = 0b00100010;
+        // 01001100
+        char expectedOutput2 = 0b01001100;
+        SDES sdes2 = new SDES("1111111111");
+        char output2 = sdes2.decrypt(input2);
+        assertEquals(expectedOutput2, output2);
+
+        // 11110000
+        char input3 = 0b11110000;
+        // 00000000
+        char expectedOutput3 = 0b00000000;
+        SDES sdes3 = new SDES("0000000000");
+        char output3 = sdes3.decrypt(input3);
+        assertEquals(expectedOutput3, output3);
+
+        // 00001111
+        char input4 = 0b00001111;
+        // 11111111
+        char expectedOutput4 = 0b11111111;
+        SDES sdes4 = new SDES("1111111111");
+        char output4 = sdes4.decrypt(input4);
+        assertEquals(expectedOutput4, output4);
 
         System.out.println(" success");
     }
