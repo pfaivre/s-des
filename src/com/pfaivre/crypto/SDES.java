@@ -137,21 +137,11 @@ public class SDES {
         // Découpage en deux moitiés de 5 bits.
         boolean[] leftHalf = new boolean[5];
         boolean[] rightHalf = new boolean[5];
-        System.arraycopy(input, 0, leftHalf, 0, leftHalf.length);
-        System.arraycopy(input, 5, rightHalf, 0, rightHalf.length);
 
-        // Décalage de chaque moitié (peut être optimisé)
-        for (int i = 0 ; i < offset ; i++) {
-            boolean ltmp = leftHalf[0];
-            boolean rtmp = rightHalf[0];
-
-            for (int j = 0; j < 4; j++) {
-                leftHalf[j] = leftHalf[j + 1];
-                rightHalf[j] = rightHalf[j + 1];
-            }
-
-            leftHalf[4] = ltmp;
-            rightHalf[4] = rtmp;
+        // Décalage vers la gauche
+        for (int i = 0 ; i < 5 ; i++) {
+            leftHalf[5 - (((5 - i - 1) + offset) % 5) - 1] = input[i];
+            rightHalf[5 - (((5 - i - 1) + offset) % 5) - 1] = input[i + 5];
         }
 
         // Rassemblement des deux moitiés
