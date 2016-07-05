@@ -20,6 +20,7 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) throws IOException {
+        // TODO: Use command line arguments to get the file
         File inputFile = new File("/home/pierre/Hubic/EXIA/6 - Cryptographie/Prosit 2/message_test.txt");
         File outputFile = new File("/home/pierre/Hubic/EXIA/6 - Cryptographie/Prosit 2/message_test_enc.txt");
 

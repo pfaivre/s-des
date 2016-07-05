@@ -1,7 +1,5 @@
 package com.pfaivre.crypto;
 
-import org.junit.Test;
-
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;

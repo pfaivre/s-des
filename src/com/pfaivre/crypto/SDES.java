@@ -18,6 +18,7 @@ import java.util.ArrayList;
 /**
  * Implémentation de l'algorithme S-DES
  * Cette classe permet le chiffrement ainsi que le déchiffrement d'un message.
+ * // TODO: Translate all the comments in english
  */
 public class SDES {
     /**
