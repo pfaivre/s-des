@@ -13,7 +13,7 @@ But first, it will need to **generate two sub-keys** (K1 and K2) because it cann
 
 Then, with K1 and K2, it will be able to read your message and **pass the pieces through some simple functions** named IP, FK, SW and others.
 
-![Subkeys generation](docs/images/encrypting.png)
+![Subkeys generation](docs/images/encrypting_simple.png)
 
 After this, your message will be **successfully encrypted**.
 

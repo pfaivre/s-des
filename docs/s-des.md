@@ -15,14 +15,14 @@ Actually, SDES cannot use directly the key. It needs to compute two 8-bits subke
 
 The actions named P10, Shift and P8 are some very simple functions:
 
-P10 performs a permutation (it changes the order of the bits) in this way:  
+**P10** performs a permutation (it changes the order of the bits) in this way:  
 ![P10](images/P10.png)
 
-Shift performs a rotation of the bits on each half of the key:  
+**Shift** performs a rotation of the bits on each half of the key:  
 ![Shift](images/Shift.png)  
 Its parameter correspond of the number of times the rotation is performed.
 
-P8 does an other permutation and keeps only 8 of the 10 orignal bits:  
+**P8** does an other permutation and keeps only 8 of the 10 orignal bits:  
 ![P8](images/P8.png)
 
 ## Second step, encrypting the message
