@@ -27,5 +27,16 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/Downloads/args4j-2.33.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/Downloads/args4j-2.33.jar!/OSGI-OPT/src" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>

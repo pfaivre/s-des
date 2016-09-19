@@ -1,13 +1,10 @@
-/**
+/*
  * SDES
  * Pierre Faivre
  *
  * SDES.java
  * Creation : 30/03/2016
  * Last modification : 01/04/2016
- *
- * Description : Workshop Cryptographie
- * Exia A4 2015/2016
  */
 
 package com.pfaivre.crypto;
@@ -488,7 +485,7 @@ public class SDES {
             while ((c = input.read()) != -1) {
                 byte decrypted = this.decrypt((byte)c);
                 output.write(decrypted);
-                System.out.print((char)decrypted);
+                //System.out.print((char)decrypted);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
