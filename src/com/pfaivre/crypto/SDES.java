@@ -4,7 +4,7 @@
  *
  * SDES.java
  * Creation : 30/03/2016
- * Last modification : 01/04/2016
+ * Last modification : 23/09/2016
  */
 
 package com.pfaivre.crypto;
@@ -13,23 +13,22 @@ import java.io.*;
 import java.util.ArrayList;
 
 /**
- * Implémentation de l'algorithme S-DES
- * Cette classe permet le chiffrement ainsi que le déchiffrement d'un message.
- * // TODO: Translate all the comments in english
+ * S-DES algorithm implementation
+ * This class can handle the encryption and decryption of a file
  */
 public class SDES {
     /**
-     * Clé de chiffrement
+     * Main key
      */
     private boolean[] master_key;
 
     /**
-     * Sous-clé 1
+     * Subkey 1
      */
     private boolean[] K1;
 
     /**
-     * Sous-clé 2
+     * Subkey 2
      */
     private boolean[] K2;
 
@@ -52,14 +51,14 @@ public class SDES {
          {{true,  false}, {false, true},  {false, false}, {true,  true}}};
 
     /**
-     * Instancie une nouvelle instance de chiffrment S-DES
-     * @param key Clé de chiffrement de 10 bits. Exemple "0110100111"
+     * Instanciate a new instance of SDES to perform encryption or decrytion operations.
+     * @param key 10-bit key. For example "0110100111"
      */
     public SDES(String key) {
         master_key = new boolean[10];
 
 //        if (key.length() != 10)
-//            throw new Exception("La clé doit faire 10 bits.");
+//            throw new Exception("The key must be of the size of 10 bits.");
 
         for (int i = 0 ; i < key.length() ; i++) {
             if (key.charAt(i) == '0')
@@ -67,7 +66,7 @@ public class SDES {
             else if (key.charAt(i) == '1')
                 this.master_key[i] = true;
 //            else
-//                throw new Exception("La clé ne doit contenir que des '0' ou des '1'.");
+//                throw new Exception("The key can only contain '0' or '1'.");
         }
 
         ArrayList<boolean[]> keys = SDES.generateKeys(this.master_key);
@@ -75,20 +74,20 @@ public class SDES {
         this.K2 = keys.get(1);
     }
 
-    // #################################
-    // Génération des sous-clés K1 et K2
-    // #################################
+    // ###############################
+    // Generation of subkeys K1 and K2
+    // ###############################
 
     /**
-     * Effectue une permutation P10
+     * Performs a P10 permutation
      * P10(k1, k2, k3, k4, k5, k6, k7, k8, k9, k10) = (k3, k5, k2, k7, k4, k10, k1, k9, k8, k6)
-     * @param input Clé d'entrée de 10 bits à transformer
-     * @return un tableau de 8 booléens.
+     * @param input 10-bit sequence to transform
+     * @return an array of 8 booleans
      */
     static boolean[] p10(boolean[] input) {
         boolean[] output = new boolean[10];
 
-        // C'est une permutation arbitraire, il faut donc le faire à la main
+        // This is an abitrary permutation, it needs to be done by hand
         output[0] = input[2];
         output[1] = input[4];
         output[2] = input[1];
@@ -104,15 +103,15 @@ public class SDES {
     }
 
     /**
-     * Effectue une permutation P8
-     * P10(k1, k2, k3, k4, k5, k6, k7, k8, k9, k10) = (k6, k3, k7, k4, k8, k5, k10, k9)
-     * @param input Clé d'entrée de 10 bits à transformer
-     * @return un tableau de 8 booléens.
+     * Performs a P8 permutation
+     * P8(k1, k2, k3, k4, k5, k6, k7, k8) = (k6, k3, k7, k4, k8, k5, k10, k9)
+     * @param input 8-bit sequence to transform
+     * @return an array of 8 booleans
      */
     static boolean[] p8(boolean[] input) {
         boolean[] output = new boolean[8];
 
-        // C'est une permutation arbitraire, il faut donc la faire à la main
+        // This is an abitrary permutation, it needs to be done by hand
         output[0] = input[5];
         output[1] = input[2];
         output[2] = input[6];
@@ -126,23 +125,23 @@ public class SDES {
     }
 
     /**
-     * Effectue un décalage de bits vers la gauche sur chaque moitié de 5 bits
-     * Exemple : 10000 01100 devient 00001 11000 avec un décalage de 1 bit.
-     * @param input Suite de 10 bits à transformer
-     * @param offset Amplitude du décalage
+     * Rotates all the bits of each half of the sequence to the left
+     * For example : 10000 01100 becomes 00001 11000 with a shift of 1 bit.
+     * @param input 10-bit sequence to transform
+     * @param offset number of times the rotation is performed
      */
     static boolean[] circularLeftShift(boolean[] input, int offset) {
-        // Découpage en deux moitiés de 5 bits.
+        // Splits in two halves of 5 bits
         boolean[] leftHalf = new boolean[5];
         boolean[] rightHalf = new boolean[5];
 
-        // Décalage vers la gauche
+        // Rotates to the left
         for (int i = 0 ; i < 5 ; i++) {
             leftHalf[5 - (((5 - i - 1) + offset) % 5) - 1] = input[i];
             rightHalf[5 - (((5 - i - 1) + offset) % 5) - 1] = input[i + 5];
         }
 
-        // Rassemblement des deux moitiés
+        // Gathering of the two halves
         boolean[] output = new boolean[10];
         System.arraycopy(leftHalf, 0, output, 0, leftHalf.length);
         System.arraycopy(rightHalf, 0, output, 5, rightHalf.length);
@@ -151,13 +150,14 @@ public class SDES {
     }
 
     /**
-     * Génère les deux sous-clés à partir de la clé principale
-     * @param master_key Clé principale de 10 bits
-     * @return ArrayList contenant dans la case 0 => K1 et dans la case 1 => K2
+     * Generates the two subkeys from the main one
+     * @param master_key 10-bit main key
+     * @return ArrayList containing in index 0 => K1 and in index 1 => K2
      */
     static ArrayList<boolean[]> generateKeys(boolean[] master_key) {
         // master_key => p10 => circularLeftShift(1) => p8 => K1
         boolean[] K1 = p8(circularLeftShift(p10(master_key), 1));
+
         // master_key => p10 => circularLeftShift(3) => p8 => K2
         boolean[] K2 = p8(circularLeftShift(p10(master_key), 3));
 
@@ -167,20 +167,20 @@ public class SDES {
         return keys;
     }
 
-    // ########################
-    // Fonctions de chiffrement
-    // ########################
+    // ###################################
+    // Encryption and decryption functions
+    // ###################################
 
     /**
-     * Effectue une permutation initiale (Initial Permutation, IP) sur un octet
+     * Performs an Initial Permutation (IP) on a byte
      * IP(k1, k2, k3, k4, k5, k6, k7, k8) = (k2, k6, k3, k1, k4, k8, k5, k7)
-     * @param input Octet à permuter
-     * @return Octet transformé
+     * @param input Byte to transform
+     * @return transformed byte
      */
     static boolean[] ip(boolean[] input) {
         boolean[] output = new boolean[8];
 
-        // C'est une permutation arbitraire, il faut donc la faire à la main
+        // This is an abitrary permutation, it needs to be done by hand
         output[0] = input[1];
         output[1] = input[5];
         output[2] = input[2];
@@ -194,15 +194,16 @@ public class SDES {
     }
 
     /**
-     * Effectue une permutation initiale inverse (Reversed Initial Permutation, RIP ou IP-1) sur un octet
+     * Performs an Reversed Initial Permutation (RIP or IP-1) on a byte
      * IP−1(k1, k2, k3, k4, k5, k6, k7, k8) = (k4, k1, k3, k5, k7, k2, k8, k6)
-     * @param input Octet à permuter
-     * @return Octet transformé
+     * Note that IP ans RIP are defined so x = RIP(IP(x))
+     * @param input Byte to transform
+     * @return transformed byte
      */
     static boolean[] rip(boolean[] input) {
         boolean[] output = new boolean[8];
 
-        // C'est une permutation arbitraire, il faut donc la faire à la main
+        // This is an abitrary permutation, it needs to be done by hand
         output[0] = input[3];
         output[1] = input[0];
         output[2] = input[2];
@@ -216,15 +217,15 @@ public class SDES {
     }
 
     /**
-     * Effectue une opération d'expansion/permutation (E/P) sur un groupe de 4 bits.
+     * Performs an Expansion/Permutation (E/P) operation on a 4-bit word
      * E/P(n1, n2, n3, n4) = (n4, n1, n2, n3, n2, n3, n4, n1)
-     * @param input Groupe de 4 bits à transformer
-     * @return Octet résultant de la transformation
+     * @param input 4-bit word to transform
+     * @return 8-bit (byte) resulting of the operation
      */
     static boolean[] ep(boolean[] input) {
         boolean[] output = new boolean[8];
 
-        // C'est une permutation arbitraire, il faut donc la faire à la main
+        // This is an abitrary permutation, it needs to be done by hand
         output[0] = input[3];
         output[1] = input[0];
         output[2] = input[1];
@@ -238,11 +239,11 @@ public class SDES {
     }
 
     /**
-     * Effectue une opération de ou exclusif (XOR) sur deux suites de bits
-     * Les deux opérandes doivent avoir le même nombre de bits
-     * @param a Opérande 1
-     * @param b Opérande 2
-     * @return Résultat
+     * Performs an exlusif or (XOR) operation on two words
+     * Both operands must have the same number of bits
+     * @param a Operand 1
+     * @param b Operand 2
+     * @return result
      */
     static boolean[] xor(boolean[] a, boolean[] b) {
         boolean[] output = new boolean[a.length];
@@ -254,47 +255,47 @@ public class SDES {
     }
 
     /**
-     * Transforme un octet en utilisant les S-Boxes comme table de correspondance
-     * @param input Une suite de 8 bits
-     * @return Une suite de 4 bits résultant de la transformation
+     * Transforms a byte by using the S-Boxes as correspondence table
+     * @param input An 8-bit word
+     * @return A 4-bit word resulting of the transformation
      */
     static boolean[] sboxTransform(boolean[] input) {
         int i, j = 0;
 
-        // Moitié gauche avec S0
+        // Left half with S0
 
-        // Les 1er et 4eme bits donnent l'indice de la ligne
+        // The 1st and 4th bits give the index of the row
         i = (input[0] ? 2 : 0) + (input[3] ? 1 : 0);
-        // Les 2eme et 3eme bits donnent l'indice de la colonne
+        // The 2nd and 3rd bits give the index of the column
         j = (input[1] ? 2 : 0) + (input[2] ? 1 : 0);
 
-        // Ces indices pointent vers une case de S0 dont on récupère la valeur
+        // These indexes point to a cell of S0 whose value is taken
         boolean[] s0Result = S0[i][j];
 
-        // Moitié droite avec S1
+        // Right half with S1
 
-        // Les 1er et 4eme bits donnent l'indice de la ligne
+        // The 5th and 8th bits give the index of the row
         i = (input[4] ? 2 : 0) + (input[7] ? 1 : 0);
-        // Les 2eme et 3eme bits donnent l'indice de la colonne
+        // The 6th and 7th bits give the index of the column
         j = (input[5] ? 2 : 0) + (input[6] ? 1 : 0);
 
-        // Ces indices pointent vers une case de S1 dont on récupère la valeur
+        // These indexes point to a cell of S1 whose value is taken
         boolean[] s1Result = S1[i][j];
 
-        // Enfin on rassemble les résultats obtenus en une suite de 4 bits
+        // Finally we gather the given results in a 4-bit word
         return new boolean[] {s0Result[0], s0Result[1], s1Result[0], s1Result[1]};
     }
 
     /**
-     * Effectue une permutation P4
+     * Performs a P4 permutation
      * P4(k1, k2, k3, k4) = (k2, k4, k3, k1)
-     * @param input Suite de 4 bits à transformer
-     * @return Suite de 4 bit après transformation
+     * @param input 4-bit word to transform
+     * @return 4-bit word resulting of the transformation
      */
     static boolean[] p4(boolean[] input) {
         boolean[] output = new boolean[4];
 
-        // C'est une permutation arbitraire, il faut donc la faire à la main
+        // This is an abitrary permutation, it needs to be done by hand
         output[0] = input[1];
         output[1] = input[3];
         output[2] = input[2];
@@ -304,33 +305,31 @@ public class SDES {
     }
 
     /**
-     * Sous-fonction de transformation de chiffrement
-     * @param right Moitié droite de l'octet à transformer
-     * @param sk Sous-clé K1 ou K2
-     * @return un ensemble de 4 bits
+     * Encryption transformation sub-function
+     * @param right right half of the byte to transform
+     * @param sk Subkey K1 or K2
+     * @return a sequence of 4 bits
      */
     static boolean[] f(boolean[] right, boolean[] sk) {
-        // on applique E/P sur right
-        // on effectue un OU exclusif entre le résultat obtenu et la sous-clé sk passée en paramètre
-        // on effectue les opération s des sand-boxes sur chaque moitié obtenue
-        // on applique P4 sur le résultat et on le renvoie
+        // We apply E/P on right
+        // We perform a XOR between the given result and the subkey
+        // We pass the result through the S-Boxes
+        // Finally we "shuffle" with P4 and return it
         return p4(sboxTransform(xor(ep(right), sk)));
     }
 
     /**
-     * Transformation fK
-     * @param bits Suite de 8 bits issus de IP ou RIP
-     * @param sk Sous-clé K1 ou K2
-     * @return une suite de 8 bits
+     * fK transformation
+     * @param bits 8-bit sequence given by IP or RIP
+     * @param sk Subkey K1 or K2
+     * @return a sequence of 8 bits
      */
     static boolean[] fK(boolean[] bits, boolean[] sk) {
-        // on effectue un OU exclusif entre les 4 bits de gauche en entrée et
-        // le résultat de la fonction F appliqué e aux 4 bits de droite en
-        // entrée et a la clé passée en paramètre.
-        // On concatène les 4 bits de droite en entrée avec le résu ltat
-        // précédemmen t obtenu, et on renvoie.
+        // We perform a XOR between the left half and the result of f(right)
+        // We concatenate the 4 bits of the original right with the result above
+        // We return this concatenation
 
-        // Découpage en deux moitiés de 4 bits.
+        // Split in two halves
         boolean[] left = new boolean[4];
         boolean[] right = new boolean[4];
         System.arraycopy(bits, 0, left, 0, left.length);
@@ -339,7 +338,7 @@ public class SDES {
         // = left XOR f(right, SK)
         boolean[] transformed = xor(left, f(right, sk));
 
-        // Concat(transformed, right)
+        // = concat(transformed, right)
         boolean[] output = new boolean[8];
         System.arraycopy(transformed, 0, output, 0, transformed.length);
         System.arraycopy(right, 0, output, 4, right.length);
@@ -348,13 +347,12 @@ public class SDES {
     }
 
     /**
-     * Échange les deux moitiés de 4 bits d'un octet
-     * Par exemple, 11110000 devient 00001111
-     * @param input Octet à transformer
-     * @return Octet résultant de la transformation
+     * Swaps the two halves of a byte
+     * For exemple, 11110000 becomes 00001111
+     * @param input Byte to transform
+     * @return Byte resulting
      */
     static boolean[] sw(boolean[] input) {
-        // Création d'un nouvel octet en intervertant les deux moitiés
         boolean[] output = new boolean[8];
         System.arraycopy(input, 4, output, 0, 4);
         System.arraycopy(input, 0, output, 4, 4);
@@ -363,19 +361,19 @@ public class SDES {
     }
 
     /**
-     * Convertit un char (un octet du coup) en tableau de booléens
-     * @param block Octet à traduire
-     * @return Tableau de 8 boolean
+     * Converts a byte into a boolean array
+     * @param block Byte to transcript
+     * @return Array of 8 booleans
      */
     static boolean[] byte2bool(byte block) {
         boolean[] result = new boolean[8];
 
-        // On parcourt l'octet bit par bit
+        // Let's run through the bits individually
         for (int i = 0 ; i < 8 ; i++) {
-            // Permet de "découper" le bit à la position i dans l'octet
+            // Slice the bit at the position i in the byte
             int b = ((block >> i) & 1);
 
-            // Et on l'insère dans le tableau de boolean
+            // And insert it in the array in the form of a boolean
             result[7 - i] = b == 1;
         }
 
@@ -383,19 +381,19 @@ public class SDES {
     }
 
     /**
-     * Convertit un tableau de booléens en char (un octet quoi)
-     * @param block Tableau de 8 booléens représentants les bits
-     * @return char
+     * Converts a boolean array into a byte
+     * @param block An array of 8 booleans
+     * @return The resulting byte
      */
     static byte bool2byte(boolean[] block) {
         byte result = 0b00000000;
 
-        // Pour chaque booléen (bit) du tableau
+        // For each boolean (bit) of the array
         for (int i = 0 ; i < block.length ; i++) {
-            // On "l'imprime" à droite dans le char
+            // We "print" it at the end of the byte
             result = (byte)(result | (block[i] ? 1 : 0));
 
-            // Et on décale les précédents vers la gauche pour laisser la place au suivant
+            // And we shift the previous bits to the left to let space for the next one
             if (i < block.length - 1)
                 result = (byte)(result << 1);
         }
@@ -404,9 +402,9 @@ public class SDES {
     }
 
     /**
-     * Chiffre un block de données
-     * @param block Un octet de données à chiffrer
-     * @return Un octet chiffré
+     * Encrypts a data block
+     * @param block A plain byte to encrypt
+     * @return The resulting byte
      */
     @SuppressWarnings("Duplicates")
     byte encrypt(byte block) {
@@ -422,9 +420,9 @@ public class SDES {
     }
 
     /**
-     * Déchiffre un block de données
-     * @param block Un octer à déchiffrer
-     * @return Un octet en clair
+     * Decrypts a data block
+     * @param block A byte to decrypt
+     * @return The resulting plain byte
      */
     @SuppressWarnings("Duplicates")
     byte decrypt(byte block) {
@@ -440,10 +438,10 @@ public class SDES {
     }
 
     /**
-     * Chiffre un fichier
-     * Le contenu du fichier sera chiffré octet par octet
-     * @param inputFile Chemin vers le fichier à lire
-     * @param outputFile Chemin vers le fichier à écrire
+     * Encrypts a file
+     * Its content will be ciphered by blocks of one byte
+     * @param inputFile Path to the file to read
+     * @param outputFile Path to the file to write
      */
     public void encryptFile(File inputFile, File outputFile) throws IOException {
         FileInputStream input = null;
@@ -468,10 +466,10 @@ public class SDES {
     }
 
     /**
-     * Déchiffre un fichier
-     * Le contenu du fichier sera déchiffré octet par octet
-     * @param inputFile Chemin vers le fichier à lire
-     * @param outputFile Chemin vers le fichier à écrire
+     * Decrypts a file
+     * Its content will be unciphered by blocks of one byte
+     * @param inputFile Path to the file to read
+     * @param outputFile Path to the file to write
      */
     public void decryptFile(File inputFile, File outputFile) throws IOException {
         FileInputStream input = null;
@@ -481,7 +479,7 @@ public class SDES {
             input = new FileInputStream(inputFile);
             output = new FileOutputStream(outputFile);
 
-            int c = -1;
+            int c;
             while ((c = input.read()) != -1) {
                 byte decrypted = this.decrypt((byte)c);
                 output.write(decrypted);
@@ -503,6 +501,6 @@ public class SDES {
         for (boolean bit : this.master_key)
             mkey.append(bit ? "1" : "0");
 
-        return "Clé : " + mkey.toString();
+        return "Key : " + mkey.toString();
     }
 }
