@@ -20,6 +20,12 @@
 .idea/gradle.xml
 .idea/libraries
 
+# Maven
+target
+
+# Ant
+build
+
 # Mongo Explorer plugin:
 .idea/mongoSettings.xml
 
