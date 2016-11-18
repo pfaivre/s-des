@@ -56,14 +56,39 @@ IP and RIP, we get the originel byte:
 
 **FK** meanwhile is an assemblage of functions.  
 Given L and R the two halves of the byte.  
-Given K_x_ the subkey, K1 or K2.
-Given ⊕ the exclusive or operator.
+Given Kx the subkey, K1 or K2.  
+Given ⊕ the Exclusive Or operator.  
 
 FK is then defined as follows:  
-FK(L, R) = (L ⊕ f(R, K_x_), R)
+`FK(L, R) = (L ⊕ f(R, Kx), R)`
 
 **f** is a sub-function of FK and is a composition of simple functions:  
-f(R, K_x_) = P4(sboxTransform(E/P(R) ⊕ K_x_))
+`f(R, Kx) = P4(sboxTransform(E/P(R) ⊕ Kx))`
+
+Don't worry, these are the last ones.
+
+**P4** is an other permutation:  
+![P4](images/P4.png)
+
+**E/P** is a permutation that expands the given array:  
+![E/P](images/EP.png)
+
+**sboxTransform** is a function that uses the principle of the naval battle 
+game.  
+We define two tables called S-Boxes whose cells each contain two bits.
+They are defined as follows:  
+![S-Boxes](images/S-Boxes.png)
+
+Their principle is simple, we take an input byte, for example `1010 0110`, and 
+according to what it contains, it will select a cell for each table, giving the 
+output value.
+The first 4 bits on the left will be used for the array S0, and the 4 bits on
+the right to table S1. Like this:  
+![S-Boxes example](images/S-Boxes_example.png)
+
+**⊕** (**XOR**) is is a function that performs a logical operation of 
+*exclusive or* between two sequences of bits:  
+![XOR](images/XOR.png)
 
 ## Final step, decrypting the encrypted message
 
