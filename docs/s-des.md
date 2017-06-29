@@ -48,10 +48,10 @@ input byte by byte. Each of these will pass through some simple functions.
 ![IP](images/IP.png)
 
 **RIP** is also a permutation, in such a way that when we perform successively
-IP and RIP, we get the originel byte:  
+IP and RIP, we get the original byte:  
 ![RIP](images/RIP.png)
 
-**SW** just simple swaps the two halves of the byte:  
+**SW** just simply swaps the two halves of the byte:  
 ![SW](images/SW.png)
 
 **FK** meanwhile is an assemblage of functions.  
@@ -90,7 +90,9 @@ the right to table S1. Like this:
 *exclusive or* between two sequences of bits:  
 ![XOR](images/XOR.png)
 
-## Final step, decrypting the encrypted message
+## Final step, decrypting the message
 
+Decryption is very simple. We follow exactly the same processus as for
+encryption, inverting K1 and K2.
 
-
+![Encryption process](images/decrypting.png)
